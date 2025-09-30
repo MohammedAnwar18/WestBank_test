@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="utf-8" />
-  <title>Orthophoto + نقاط تفتيش</title>
+  <title>Orthophoto + نقاط تفتيش أكبر</title>
   <link rel="stylesheet" href="https://js.arcgis.com/4.26/esri/themes/light/main.css">
   <script src="https://js.arcgis.com/4.26/"></script>
   <style>
@@ -25,70 +25,40 @@
       "esri/layers/GraphicsLayer"
     ], function(Map, MapView, TileLayer, Graphic, GraphicsLayer) {
 
-      // طبقة الصورة الجوية
       const orthoLayer = new TileLayer({
         url: "https://orthophotos.geomolg.ps/adaptor/rest/services/Orthophotos_WB_2023_15cm_jp2_PG1923_jp2/MapServer"
       });
 
-      // إنشاء الخريطة
       const map = new Map({
         basemap: null,
         layers: [orthoLayer]
       });
 
-      // واجهة العرض
       const view = new MapView({
         container: "viewDiv",
         map: map,
-        center: [35.2, 31.9], // وسط الضفة الغربية تقريبياً
+        center: [35.2, 31.9],
         zoom: 14
       });
 
-      // طبقة الرسومات (للنقاط)
       const graphicsLayer = new GraphicsLayer();
       map.add(graphicsLayer);
 
-      // بيانات نقاط التفتيش
       const checkpoints = [
-        {
-          coords: [35.2, 31.9],
-          name: "نقطة تفتيش المفرق",
-          description: "هذه نقطة تفتيش مهمة على الطريق."
-        },
-        {
-          coords: [35.25, 31.95],
-          name: "نقطة تفتيش شارع الخليل",
-          description: "تعمل على مراقبة المرور على الشارع الرئيسي."
-        },
-        {
-          coords: [35.3, 31.92],
-          name: "نقطة تفتيش الجبل",
-          description: "تغطية المنطقة الجبلية والطرق الفرعية."
-        }
+        { coords: [35.2, 31.9], name: "نقطة تفتيش المفرق", description: "هذه نقطة تفتيش مهمة على الطريق." },
+        { coords: [35.25, 31.95], name: "نقطة تفتيش شارع الخليل", description: "تعمل على مراقبة المرور على الشارع الرئيسي." },
+        { coords: [35.3, 31.92], name: "نقطة تفتيش الجبل", description: "تغطية المنطقة الجبلية والطرق الفرعية." }
       ];
 
-      // إضافة النقاط للخريطة
       checkpoints.forEach(function(cp) {
-        const point = {
-          type: "point",
-          longitude: cp.coords[0],
-          latitude: cp.coords[1]
-        };
-
-        const pointSymbol = {
-          type: "simple-marker",
-          color: "red",
-          size: "12px"
-        };
+        const point = { type: "point", longitude: cp.coords[0], latitude: cp.coords[1] };
+        const pointSymbol = { type: "simple-marker", color: "red", size: "20px" }; // الحجم الأكبر
 
         const pointGraphic = new Graphic({
           geometry: point,
           symbol: pointSymbol,
           attributes: { Name: cp.name },
-          popupTemplate: {
-            title: "{Name}",
-            content: cp.description
-          }
+          popupTemplate: { title: "{Name}", content: cp.description }
         });
 
         graphicsLayer.add(pointGraphic);
@@ -98,3 +68,4 @@
   </script>
 </body>
 </html>
+
